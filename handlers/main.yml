@@ -1,0 +1,5 @@
+- name: restart wireguard mesh
+  systemd:
+    name: "wg-quick@mesh.service"
+    state: restarted
+    enabled: True

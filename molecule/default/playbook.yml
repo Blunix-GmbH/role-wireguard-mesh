@@ -1,0 +1,35 @@
+- name: Converge
+  hosts: all
+  roles:
+    - role: role-wireguard-mesh  # noqa 106
+
+  # Put this into inventory/host_vars/
+  pre_tasks:
+    - name: set wireguard IPs for debian1
+      set_fact:
+        nic_wg_mesh_ip: 172.16.0.1
+        nic_pub_ip: 10.99.0.5
+      when: inventory_hostname == "debian1"
+    - name: set wireguard IPs for debian2
+      set_fact:
+        nic_wg_mesh_ip: 172.16.0.2
+        nic_pub_ip: 10.99.0.6
+      when: inventory_hostname == "debian2"
+    - name: set wireguard IPs for debian3
+      set_fact:
+        nic_wg_mesh_ip: 172.16.0.3
+        nic_pub_ip: 10.99.0.7
+      when: inventory_hostname == "debian3"
+
+
+  vars:
+
+    # Subnet of this wireguard mesh
+    wireguard_mesh_subnet: "172.16.0.0/16"
+
+    # Public IP of the servers
+    #nic_pub_i: defined in inventory/hosts
+
+    # Wireguard IP of the server
+    #nic_wg_mesh_ip: defined in inventory/hosts
+

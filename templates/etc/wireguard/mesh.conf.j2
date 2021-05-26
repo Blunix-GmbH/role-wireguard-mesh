@@ -1,0 +1,20 @@
+# Server configruation
+[Interface]
+Address = {{ nic_wg_mesh_ip }}
+ListenPort = {{ wireguard_mesh_port }}
+PostUp = wg set %i private-key /etc/wireguard/mesh.key
+
+
+
+# Clients configuration
+
+{% for wireguard_mesh_peer in groups['all'] %}
+{% if wireguard_mesh_peer != inventory_hostname %}
+# {{ wireguard_mesh_peer }}
+[Peer]
+PublicKey = {{ hostvars[wireguard_mesh_peer]['wireguard_mesh_public_key'] }}
+AllowedIPs = {{ hostvars[wireguard_mesh_peer]['nic_wg_mesh_ip'] }}
+Endpoint = {{ hostvars[wireguard_mesh_peer]['nic_pub_ip'] }}:{{ wireguard_mesh_port }}
+
+{% endif %}
+{% endfor %}
